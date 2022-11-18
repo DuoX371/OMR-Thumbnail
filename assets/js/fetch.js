@@ -22,7 +22,6 @@ $(document).ready(function() {
           $('#accuracy').val(score.accuracy*100)
           $('#gamemode').val(score.beatmap.mode)
           const checkLoved = score.beatmap.status === 'loved' ? true : false;
-          console.log(checkLoved)
           if(checkLoved) $('#loved').prop('checked', true).trigger('change');
           const mods = score.mods.map(mod => mod.acronym)
           if(mods.length === 0) mods.push('NM')

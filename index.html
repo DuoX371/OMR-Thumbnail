@@ -157,7 +157,8 @@
           <div class="modal-header">
             <div class="d-flex justify-content-start">
               <div>
-                <a href='' type="button" class="btn btn-primary" id="downloadFull" >Download (Still not working)</a><br>
+                <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull" >Download (Still not working)</a><br> -->
+                <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download</button>
               </div>
               <div>
                 <button type="button" class="btn btn-primary" onclick="drawImageFull()">Reload</button><br>
@@ -298,14 +299,12 @@
       exportImg = canvas.toDataURL('image/png');
 
       // Convert canvas image to blob then add the url to href
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        console.log(blob)
-        console.log(url)
-        $('#downloadFull').attr('href', url);
-      })
-
-
+      // canvas.toBlob((blob) => {
+      //   const url = URL.createObjectURL(blob);
+      //   console.log(blob)
+      //   console.log(url)
+      //   $('#downloadFull').attr('href', url);
+      // })
     }
 
     function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
@@ -319,7 +318,11 @@
     drawImage();
 
     function download(){
-
+      // const canvas = document.getElementById('canvasF')
+      // canvas.toBlob((blob) => {
+      //   const url = URL.createObjectURL(blob);
+      //   console.log(blob)
+      // })
     }
 
 
