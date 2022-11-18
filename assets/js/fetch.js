@@ -21,6 +21,9 @@ $(document).ready(function() {
           $('#pp').val(score.pp)
           $('#accuracy').val(score.accuracy*100)
           $('#gamemode').val(score.beatmap.mode)
+          const checkLoved = score.beatmap.status === 'loved' ? true : false;
+          console.log(checkLoved)
+          if(checkLoved) $('#loved').prop('checked', true).trigger('change');
           const mods = score.mods.map(mod => mod.acronym)
           if(mods.length === 0) mods.push('NM')
           const multiSelectInstance = mdb.Select.getInstance(document.querySelector('#mods'));
@@ -30,6 +33,7 @@ $(document).ready(function() {
           beatmapObj.accuracy = score.accuracy*100
           beatmapObj.gamemode = score.beatmap.mode
           beatmapObj.mods = mods
+          beatmapObj.loved = checkLoved
           drawImage()
         }
       },
