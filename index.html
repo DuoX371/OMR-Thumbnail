@@ -254,21 +254,25 @@
           }
 
           // Username
-          drawTextF(ctx, beatmapObj.username, canvas.width/2, canvas.height-78, 'center', 'oblique 180px');
+          drawTextF(ctx, beatmapObj.username, canvas.width/2, canvas.height-78, 'center', '600 italic 180px');
           // Accuracy
-          drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', 50, canvas.height-50, 'left', '80px');
+          drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', 50, canvas.height-50, 'left', '600 80px');
           // PP
-          if(beatmapObj.loved) drawTextF(ctx, 'LOVED', 50, canvas.height-150, 'left', '120px');
-          else drawTextF(ctx, beatmapObj.pp.toFixed(0)+'PP', 50, canvas.height-150, 'left', '120px');
+          if(beatmapObj.loved) drawTextF(ctx, 'LOVED', 50, canvas.height-150, 'left', '600 120px');
+          else drawTextF(ctx, beatmapObj.pp.toFixed(0)+'PP', 50, canvas.height-150, 'left', '600 120px');
           // Mods
           const mods = beatmapObj.mods;
-          for(let i = 0; i < mods.length; i++){
-            const mod = new Image();
-            mod.src = modSource(mods[i]);
-            mod.onload = () => {
-              ctx.drawImage(mod, 90+(i*100), canvas.height-290);
+          // center the mods on the pp text
+          const modWidth = mods.length * 100;
+          const modStart = canvas.width/2 - modWidth/2;
+          mods.forEach((mod, index) => {
+            const modImg = new Image();
+            modImg.src = modSource(mod);
+            modImg.onload = () => {
+              ctx.drawImage(modImg, modStart + (index * 100) - canvas.width/2.57, canvas.height-290);
             }
-          }
+          })
+
 
           // Twitch
           if(beatmapObj.twitch){
