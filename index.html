@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://static.yewonkim.tk/css/mdb.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.9/dist/sweetalert2.all.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Exo 2' rel='stylesheet'>
+
+    <style>
+      body {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('https://wallpaperaccess.com/full/815769.jpg');
+        background-size: cover;
+        height: 100%;
+        overflow-x: hidden;
+      }
+      .theTop {
+        margin-top: 5vh;
+      }
+      .spinner-border{
+        width: 20px;
+        height: 20px;
+      }
+      /*the image part of the css*/
+      .canvas {
+        position: relative;
+      }
+      
+      .bg {
+        z-index: -5;
+      }
+      .mode {
+        position: absolute;
+        width: 10%;
+        height: auto;
+        right: 1vh;
+      }
+    </style>
+    <title>OMR Thumbnail Maker</title>
+  </head>
+  <body>
+    <div class="row theTop">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="card" >
+          <div class="card-body">
+            <h5 class="card-title">OMR Thumbnail Maker</h5>
+            <!-- Form submit -->
+            <form>
+              <div class="row">
+                <div class="col-6"><input type="text" class="form-control" id="url" placeholder="Enter score url"></div>
+                <div class="col-6"><button class="btn btn-primary">Search<div class="spinner-border d-none" role="status"></div></button>
+              </div>
+              </div>
+              <p><small><em>Ex. https://osu.ppy.sh/scores/osu/4068767263</em></small></p>
+            </form>
+
+            <!-- The next row -->
+            <div class="row">
+              <!-- Canvas image display -->
+              <div class="col-xl-6">
+                <h3>Canvas</h3>
+                <div id="canvasDiv">
+                  <canvas id="canvas" width="455" height="256"></canvas>
+                </div>
+                <p><small><em>Preview purposes. Dont save this image</em></small></p>
+                <button class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#fullResModal" onclick="drawImageFull()">View Full Res</button>
+              </div>
+              <div class="col-xl-6">
+                <h3>Manual Settings</h3>
+                <!-- Username -->
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control w-50" id="username" >
+                </div>
+                <!-- PP -->
+                <div class="form-group">
+                  <label for="pp">PP</label>
+                  <input type="number" class="form-control w-50" id="pp">
+                  <label for="loved">Loved?</label>
+                  <input type="checkbox" class="form-check-input" id="loved" value="">
+                </div>
+                <!-- Accuracy -->
+                <div class="form-group">
+                  <label for="accuracy">Accuracy</label>
+                  <input type="number" class="form-control w-50" id="accuracy">
+                </div>
+                <!-- Mods -->
+                <div class="form-group w-50">
+                  <label for="mods">Mods</label>
+                  <select class="select form-control" multiple id="mods">
+                    <option value="NM" data-mdb-icon="assets/image/nomod.png">NM</option>
+                    <option value="HD" data-mdb-icon="assets/image/hidden.png">HD</option>
+                    <option value="HR" data-mdb-icon="assets/image/hardrock.png">HR</option>
+                    <option value="DT" data-mdb-icon="assets/image/doubletime.png">DT</option>
+                    <option value="NC" data-mdb-icon="assets/image/nightcore.png">NC</option>
+                    <option value="NF" data-mdb-icon="assets/image/nofail.png">NF</option>
+                    <option value="FL" data-mdb-icon="assets/image/flashlight.png">FL</option>
+                    <option value="EZ" data-mdb-icon="assets/image/easy.png">EZ</option>
+                    <option value="HT" data-mdb-icon="assets/image/halftime.png">HT</option>
+                    <option value="SD" data-mdb-icon="assets/image/suddendeath.png">SD</option>
+                    <option value="PF" data-mdb-icon="assets/image/perfect.png">PF</option>
+                  </select>
+                </div>
+                <!-- Gamemode -->
+                <div class="form-group w-50">
+                  <label for="gamemode">Gamemode</label>
+                  <select class="form-select" aria-label="Default select example" id="gamemode">
+                    <option selected>-----</option>
+                    <option value="osu">osu</option>
+                    <option value="mania">mania</option>
+                    <option value="taiko">taiko</option>
+                    <option value="fruits">catch</option>
+                  </select>
+                </div>
+                <!-- Twitch -->
+                <div class="form-group">
+                  <label for="twitch">Liveplay?</label>
+                  <input type="checkbox" class="form-check-input" id="twitch" value="">
+                </div>
+                <!-- Manual upload background image -->
+                <div class="form-group">
+                  <label for="bg">Background Image</label>
+                  <input type="file" class="form-control-file" id="bg" accept="image/png, image/gif, image/jpeg">
+                </div>
+                <!-- End of Form Input -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2"></div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="fullResModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn btn-primary" id="downloadFull" onclick="" data="">Download</button>
+            <br><p><small>cock shit not working just right click and save image</small></p>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <canvas id="canvasF"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  <script src="assets/js/preview.js"></script>
+  <script>
+    const beatmapObj = {
+      username: '',
+      pp: 0,
+      accuracy: 0,
+      mods: [],
+      gamemode: '',
+      twitch: false,
+      bg: '',
+      loved: false
+    }
+    let beatmapImage;
+    let exportImg;
+    $('#username').on('input', (e) => {
+      const value = e.target.value;
+      beatmapObj.username = value;
+      drawImage();
+    })
+    $('#pp').on('input', (e) => {
+      e.target.value = parseInt(e.target.value);
+      const value = e.target.value;
+      drawImage();
+    })
+    $('#accuracy').on('input', (e) => {
+      const value = parseFloat(e.target.value);
+      if(value > 100) e.target.value = 100;
+      beatmapObj.accuracy = value;
+      drawImage();
+    })
+    $('#gamemode').on('change', (e) => {
+      const value = e.target.value;
+      beatmapObj.gamemode = value;
+      drawImage();
+    })
+    $('#loved').on('change', (e) => {
+      const check = e.target.checked;
+      if(check)$('#pp').prop('disabled', true);
+      else $('#pp').prop('disabled', false);
+      beatmapObj.loved = check;
+      drawImage();
+    })
+    $('#mods').on('change', (e) => {
+      beatmapObj.mods = $('#mods option:selected').toArray().map(item => item.value);
+      drawImage();
+    })
+    $('#twitch').on('change', (e) => {
+      const check = e.target.checked;
+      beatmapObj.twitch = check;
+      drawImage();
+    })
+    $('#bg').on('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        beatmapImage = e.target.result
+        drawImage();
+      }
+      reader.readAsDataURL(file);
+    })
+
+    function drawImageFull(){
+      const canvas = document.getElementById('canvasF');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 1920;
+      canvas.height = 1080;
+      ctx.fillStyle = 'white';
+      const img = new Image();
+      img.src = beatmapObj.bg;
+      // Load image background first
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const template = new Image();
+        template.src = 'assets/image/bg.png';
+        template.onload = () => {
+          ctx.drawImage(template, 0, 0, canvas.width, canvas.height);
+          
+          //Draw Mode
+          beatmapObj.gamemode = 'taiko' // To remove
+          if(beatmapObj.gamemode !== ''){
+            const mode = new Image();
+            mode.src = `assets/image/${beatmapObj.gamemode}.png`;
+            mode.onload = () => {
+              ctx.drawImage(mode, canvas.width-242, 20);
+            }
+          }
+
+          // Username
+          drawTextF(ctx, beatmapObj.username, canvas.width/2, canvas.height-78, 'center', 'oblique 180px');
+          // Accuracy
+          drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', 50, canvas.height-50, 'left', '80px');
+          // PP
+          if(beatmapObj.loved) drawTextF(ctx, 'LOVED', 50, canvas.height-150, 'left', '120px');
+          else drawTextF(ctx, beatmapObj.pp.toFixed(0)+'PP', 50, canvas.height-150, 'left', '120px');
+          // Mods
+          const mods = beatmapObj.mods;
+          for(let i = 0; i < mods.length; i++){
+            const mod = new Image();
+            mod.src = modSource(mods[i]);
+            mod.onload = () => {
+              ctx.drawImage(mod, 90+(i*100), canvas.height-290);
+            }
+          }
+
+          // Twitch
+          if(beatmapObj.twitch){
+            const twitch = new Image();
+            twitch.src = 'assets/image/live on top left.png';
+            twitch.onload = () => {
+              ctx.drawImage(twitch, 40, 0);
+            }
+          }
+        }
+      }
+      // get base64 image
+      exportImg = canvas.toDataURL('image/png');
+      // $('#downloadFull').attr('data', base64);
+    }
+
+    function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
+      ctxF.save();
+      ctxF.font = font+' "Exo 2"';
+      ctxF.textAlign=textAlign;
+      ctxF.textBaseline='middle';
+      ctxF.fillText(text,centerX,centerY);
+      ctxF.restore();
+    }
+    drawImage();
+
+    function download(){
+      const canvas = document.getElementById('canvasF')
+      let xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = function() {
+        let a = document.createElement('a');
+        a.href = window.URL.createObjectURL(xhr.response);
+        a.download = `${beatmapObj.username}.png`;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      };
+      xhr.open('GET', exportImg);
+      xhr.send();
+    }
+
+
+  </script>
+  <script src="assets/js/fetch.js"></script>
+  <script src="assets/js/external.js"></script>
+  <script src="https://static.yewonkim.tk/js/mdb.min.js"></script>
+</html>
