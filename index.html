@@ -239,7 +239,7 @@
       reader.readAsDataURL(file);
     })
 
-    async function drawImageFull(){
+    function drawImageFull(){
       const canvas = document.getElementById('canvasF');
       const ctx = canvas.getContext('2d');
       canvas.width = 1920;
@@ -247,9 +247,7 @@
       ctx.fillStyle = 'white';
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      const bImg = await urlToBase64(beatmapObj.bg)
-      console.log(bImg)
-      img.src = bImg;
+      img.src = beatmapObj.bg + `?${Date.now().toString()}`;
       // Load image background first
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -304,15 +302,22 @@
       }
     }
 
-    async function urlToBase64(url){
-      const data = await fetch(url).then(res => res.blob());
-      return await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(data);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-    }
+    // async function urlToBase64(url){
+    //   // Convert url to base64 using canvas
+    //   const canvas = document.createElement('canvas');
+    //   const ctx = canvas.getContext('2d');
+    //   const img = new Image();
+    //   canvas.width = 1920;
+    //   canvas.height = 1080;
+    //   console.log(url)
+    //   img.src = url;
+    //   return await new Promise((resolve, reject) => {
+    //     img.onload = () => {
+    //       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //       resolve(canvas.toDataURL());
+    //     }
+    //   })
+    // }
 
     function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
       ctxF.save();
