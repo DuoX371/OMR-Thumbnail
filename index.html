@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 9:52AM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 9:57AM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -260,6 +260,7 @@
           //Draw Mode
           if(beatmapObj.gamemode !== ''){
             const mode = new Image();
+            mode.crossOrigin = 'anonymous';
             mode.src = `assets/image/${beatmapObj.gamemode}.png`;
             mode.onload = () => {
               ctx.drawImage(mode, canvas.width-242, 20);
@@ -280,6 +281,7 @@
           const modStart = canvas.width/2 - modWidth/2;
           mods.forEach((mod, index) => {
             const modImg = new Image();
+            modImg.crossOrigin = 'anonymous';
             modImg.src = modSource(mod);
             modImg.onload = () => {
               ctx.drawImage(modImg, modStart + (index * 100) - canvas.width/2.57, canvas.height-290);
@@ -290,6 +292,7 @@
           // Twitch
           if(beatmapObj.twitch){
             const twitch = new Image();
+            twitch.crossOrigin = 'anonymous';
             twitch.src = 'assets/image/live on top left.png';
             twitch.onload = () => {
               ctx.drawImage(twitch, 40, 0);
