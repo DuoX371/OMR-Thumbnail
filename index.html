@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 10:03AM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 10:28AM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -239,7 +239,7 @@
       reader.readAsDataURL(file);
     })
 
-    function drawImageFull(){
+    async function drawImageFull(){
       const canvas = document.getElementById('canvasF');
       const ctx = canvas.getContext('2d');
       canvas.width = 1920;
@@ -247,7 +247,9 @@
       ctx.fillStyle = 'white';
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.src = beatmapObj.bg;
+      const bImg = await urlToBase64(beatmapObj.bg)
+      console.log(bImg)
+      img.src = bImg;
       // Load image background first
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -300,6 +302,16 @@
           }
         }
       }
+    }
+
+    async function urlToBase64(url){
+      const data = await fetch(url).then(res => res.blob());
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(data);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
     }
 
     function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
