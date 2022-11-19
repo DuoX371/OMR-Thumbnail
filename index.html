@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 12:50PM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 2:19PM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -95,10 +95,33 @@
                 <!-- PP -->
                 <div class="form-group">
                   <label for="pp">PP</label>
-                  <input type="number" class="form-control w-50" id="pp">
-                  <label for="loved">Loved?</label>
-                  <input type="checkbox" class="form-check-input" id="loved" value="">
+                  <input type="number" class="form-control w-50" id="pp" value="0">
+                  <!-- <label for="loved">Loved?</label>
+                  <input type="checkbox" class="form-check-input" id="loved" value=""> -->
                 </div>
+                
+                <!-- PP New -->
+                <div class="d-flex flex-row">
+                  <div class="form-check pe-2">
+                    <input class="form-check-input" type="radio" name="ppRadio" id="rankedRadio" value="ranked" checked>
+                    <label class="form-check-label" for="rankedRadio">
+                      Ranked
+                    </label>
+                  </div>
+                  <div class="form-check pe-2">
+                    <input class="form-check-input" type="radio" name="ppRadio" id="lovedRadio" value="loved">
+                    <label class="form-check-label" for="lovedRadio">
+                      Loved
+                    </label>
+                  </div>
+                  <div class="form-check pe-2">
+                    <input class="form-check-input" type="radio" name="ppRadio" id="unrankedRadio" value="unranked">
+                    <label class="form-check-label" for="unrankedRadio">
+                      Unranked
+                    </label>
+                  </div>
+                </div>
+
                 <!-- Accuracy -->
                 <div class="form-group">
                   <label for="accuracy">Accuracy</label>
@@ -188,7 +211,7 @@
       gamemode: '',
       twitch: false,
       bg: '',
-      loved: false
+      status: 'ranked'
     }
     let beatmapImage;
     let exportImg;
@@ -198,8 +221,9 @@
       drawImage();
     })
     $('#pp').on('input', (e) => {
-      e.target.value = parseInt(e.target.value);
+      e.target.value = parseFloat(e.target.value);
       const value = e.target.value;
+      beatmapObj.pp = parseFloat(value);
       drawImage();
     })
     $('#accuracy').on('input', (e) => {
@@ -213,11 +237,14 @@
       beatmapObj.gamemode = value;
       drawImage();
     })
-    $('#loved').on('change', (e) => {
-      const check = e.target.checked;
-      if(check)$('#pp').prop('disabled', true);
-      else $('#pp').prop('disabled', false);
-      beatmapObj.loved = check;
+    $('input[type=radio][name=ppRadio]').change((e) => {
+      const value = $('input[type=radio][name=ppRadio]:checked').val();
+      if(value !== 'ranked'){
+        $('#pp').prop('disabled', true);
+      }else {
+        $('#pp').prop('disabled', false);
+      }
+      beatmapObj.status = value;
       drawImage();
     })
     $('#mods').on('change', (e) => {
@@ -240,19 +267,20 @@
     })
 
     function drawImageFull(){
+      const live = window.location.href.startsWith('http') ? true : false;
       const canvas = document.getElementById('canvasF');
       const ctx = canvas.getContext('2d');
       canvas.width = 1920;
       canvas.height = 1080;
       ctx.fillStyle = 'white';
       const img = new Image();
-      img.crossOrigin = 'anonymous';
+      if(live) img.crossOrigin = 'anonymous';
       img.src = beatmapObj.bg;
       // Load image background first
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const template = new Image();
-        template.crossOrigin = 'anonymous';
+        if(live) template.crossOrigin = 'anonymous';
         template.src = 'assets/image/bg.png';
         template.onload = () => {
           ctx.drawImage(template, 0, 0, canvas.width, canvas.height);
@@ -260,20 +288,29 @@
           //Draw Mode
           if(beatmapObj.gamemode !== ''){
             const mode = new Image();
-            mode.crossOrigin = 'anonymous';
+            if(live) mode.crossOrigin = 'anonymous';
             mode.src = `assets/image/${beatmapObj.gamemode}.png`;
             mode.onload = () => {
               ctx.drawImage(mode, canvas.width-242, 20);
             }
           }
-
           // Username
-          drawTextF(ctx, beatmapObj.username, canvas.width/2, canvas.height-78, 'center', '600 italic 140px');
+          drawTextF(ctx, beatmapObj.username, canvas.width/2, canvas.height-78, 'center', '600 italic 110px');
           // Accuracy
-          drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', 50, canvas.height-50, 'left', '600 80px');
+          // drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', 50, canvas.height-50, 'left', '600 80px');
+          drawTextF(ctx, beatmapObj.accuracy.toFixed(2)+'%', canvas.width/8, canvas.height-50, 'center', '600 80px');
           // PP
-          if(beatmapObj.loved) drawTextF(ctx, 'LOVED', 50, canvas.height-150, 'left', '600 120px');
-          else drawTextF(ctx, beatmapObj.pp.toFixed(0)+'PP', 50, canvas.height-150, 'left', '600 120px');
+          const status = beatmapObj.status;
+          let text;
+          switch(status){
+            case 'loved': text = 'LOVED'; break;
+            case 'ranked': text = beatmapObj.pp.toFixed(0)+'PP'; break;
+            case 'unranked': text = '----'; break;
+            default: text = ''; break;
+          }
+          // drawTextF(ctx, text, 50, canvas.height-150, 'left', '600 110px');
+          // Draw text center
+          drawTextF(ctx, text, canvas.width/8.8, canvas.height-150, 'center', '600 110px');
           // Mods
           const mods = beatmapObj.mods;
           // center the mods on the pp text
@@ -281,7 +318,7 @@
           const modStart = canvas.width/2 - modWidth/2;
           mods.forEach((mod, index) => {
             const modImg = new Image();
-            modImg.crossOrigin = 'anonymous';
+            if(live) modImg.crossOrigin = 'anonymous';
             modImg.src = modSource(mod);
             modImg.onload = () => {
               ctx.drawImage(modImg, modStart + (index * 100) - canvas.width/2.57, canvas.height-290);
@@ -292,7 +329,7 @@
           // Twitch
           if(beatmapObj.twitch){
             const twitch = new Image();
-            twitch.crossOrigin = 'anonymous';
+            if(live) twitch.crossOrigin = 'anonymous';
             twitch.src = 'assets/image/live on top left.png';
             twitch.onload = () => {
               ctx.drawImage(twitch, 40, 0);

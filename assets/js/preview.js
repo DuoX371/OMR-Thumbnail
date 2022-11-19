@@ -23,9 +23,11 @@
         const acc = $('#accuracy').val();
         const pp = $('#pp').val();
         drawText(username, canvas.width/2, canvas.height-15, 'center', `bold 20px Arial`);
-        if(acc) drawText(parseFloat(acc).toFixed(2)+'%', 10, canvas.height-15, 'left', `bold 18px Arial`); 
-        if($('#loved').prop('checked')) {drawText('LOVED', 10, canvas.height-35, 'left', `bold 20px Arial`);}
-        else {if(pp) drawText(parseInt(pp)+'PP', 10, canvas.height-35, 'left', `bold 20px Arial`);}
+        if(acc) drawText(parseFloat(acc).toFixed(2)+'%', 10, canvas.height-15, 'left', `bold 18px Arial`);
+        const status = $('input[type=radio][name=ppRadio]:checked').val();
+        if(status === 'loved') drawText('LOVED', 10, canvas.height-35, 'left', `bold 20px Arial`);
+        else if(status === 'ranked') drawText(parseInt(pp)+'PP', 10, canvas.height-35, 'left', `bold 20px Arial`);
+        else if (status === 'unranked') drawText('--', 10, canvas.height-35, 'left', `bold 20px Arial`);
 
         // Draw mode
         const arr = ['osu','mania','taiko','fruits'];
