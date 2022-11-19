@@ -25,6 +25,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.9/dist/sweetalert2.all.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Exo 2' rel='stylesheet'>
 
+    <!-- JCROP -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css" integrity="sha512-G0VfAHKo2MoitbJamARbi9tuuv5rb+fuzVY+xMU1Z0t1/VkyVVAf9foAHGuSkymgMcj9XBn9bOB3BHsbgqbMvg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.js" integrity="sha512-8SpT7ueuEcyaOfE5XTafnVw9V3Bqz6uFzR3xYQIxWOed2ic4t6bfpL/k2JciMdML3n0k4QRZEe3EBFw+/eVLQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <style>
       body {
         background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('https://wallpaperaccess.com/full/815769.jpg');
@@ -53,6 +57,8 @@
         height: auto;
         right: 1vh;
       }
+      /* JCROP */
+      .jcrop-holder img { max-width: none;}
     </style>
     <title>OMR Thumbnail Maker</title>
   </head>
@@ -165,6 +171,11 @@
                   <label for="bg">Background Image</label>
                   <input type="file" class="form-control-file" id="bg" accept="image/png, image/gif, image/jpeg">
                 </div>
+                <!-- <form>
+                  <div class="form-group d-flex flex-row">
+                    <input type="text" class="form-control w-50" id="bgM"><button class="btn btn-success">🧐</button>
+                  </div>
+                </form> -->
                 <!-- End of Form Input -->
               </div>
             </div>
@@ -198,6 +209,22 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="previewUploadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+            <div class="w-100"><button type="button" class="btn btn-primary float-end" onclick="submit()">Save</button></div>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="position:relative">
+            <div class="d-flex justify-content-center" style="width:100%;height:100%"><img src="" id="previewUpload" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
   <footer style="position:absolute;bottom:0">
     Follow me on twitter @DuoX371
@@ -216,6 +243,8 @@
     }
     let beatmapImage;
     let exportImg;
+    let pos;
+
     $('#username').on('input', (e) => {
       const value = e.target.value;
       beatmapObj.username = value;
@@ -260,15 +289,52 @@
       beatmapObj.twitch = check;
       drawImage();
     })
+
     $('#bg').on('change', (e) => {
       const file = e.target.files[0];
+      if(file === undefined) return $('#previewUpload').attr('src', '');;
       const reader = new FileReader();
+      // pop up modal and display the image preview
+      $('#previewUploadModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      }, 'show');
+      // modal on close event
+      $('#previewUploadModal').on('hidden.bs.modal', (e) => {
+        JcropApi = $('#previewUpload').data('Jcrop');
+        if(JcropApi !== undefined) JcropApi.destroy();
+      })
       reader.onload = (e) => {
-        beatmapImage = e.target.result
-        drawImage();
+        $('#previewUpload').attr('src', e.target.result);
+        beatmapObj.bg = e.target.result;
+        $('#previewUpload').Jcrop({
+          aspectRatio: 16/9,
+          onSelect: (c) => {
+            pos = c;
+          },
+          setSelect: [0,0,1920,1080],
+          boxWidth: 500,
+          boxHeight: 500,          
+        })
       }
       reader.readAsDataURL(file);
     })
+
+    function submit(){
+      $('#previewUploadModal').modal('hide');
+      const {x, y, w, h} = pos;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.src = beatmapObj.bg;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
+      const blob = canvas.toDataURL();
+      beatmapImage = blob
+      beatmapObj.bg = blob
+      drawImage();
+    }
 
     function drawImageFull(){
       let live = window.location.href.startsWith('http') ? true : false;
