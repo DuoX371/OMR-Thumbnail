@@ -157,7 +157,7 @@
           <div class="modal-header">
             <div class="d-flex justify-content-start">
               <div>
-                <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull" >Download (Still not working)</a><br> -->
+                <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull">Download (Still not working)</a><br> -->
                 <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download</button>
               </div>
               <div>
@@ -246,11 +246,13 @@
       canvas.height = 1080;
       ctx.fillStyle = 'white';
       const img = new Image();
+      img.crossOrigin = 'anonymous';
       img.src = beatmapObj.bg;
       // Load image background first
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const template = new Image();
+        template.crossOrigin = 'anonymous';
         template.src = 'assets/image/bg.png';
         template.onload = () => {
           ctx.drawImage(template, 0, 0, canvas.width, canvas.height);
@@ -295,16 +297,6 @@
           }
         }
       }
-      // get base64 image
-      exportImg = canvas.toDataURL('image/png');
-
-      // Convert canvas image to blob then add the url to href
-      // canvas.toBlob((blob) => {
-      //   const url = URL.createObjectURL(blob);
-      //   console.log(blob)
-      //   console.log(url)
-      //   $('#downloadFull').attr('href', url);
-      // })
     }
 
     function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
@@ -318,11 +310,9 @@
     drawImage();
 
     function download(){
-      // const canvas = document.getElementById('canvasF')
-      // canvas.toBlob((blob) => {
-      //   const url = URL.createObjectURL(blob);
-      //   console.log(blob)
-      // })
+      let a = document.getElementById('canvasF').toDataURL();
+      $('#downloadFull').attr('href', a);
+      $('#downloadFull').attr('download', 'osu! Beatmap Preview.png');
     }
 
 
