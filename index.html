@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 5:02PM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 9:52AM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -310,9 +310,11 @@
     drawImage();
 
     function download(){
-      let a = document.getElementById('canvasF').toDataURL();
-      $('#downloadFull').attr('href', a);
-      $('#downloadFull').attr('download', 'osu! Beatmap Preview.png');
+      const canvas = document.getElementById('canvas');
+      const link = document.createElement('a');
+      link.download = 'preview.png';
+      link.href = canvas.toDataURL();
+      link.click();
     }
 
 
