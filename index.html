@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 3:07PM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 7:47PM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -181,7 +181,7 @@
             <div class="d-flex justify-content-start">
               <div>
                 <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull">Download (Still not working)</a><br> -->
-                <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download (Temporary Disabled)</button>
+                <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download</button>
                 <p><small>just right click save for now</small></p>
               </div>
               <div>
@@ -272,7 +272,6 @@
 
     function drawImageFull(){
       let live = window.location.href.startsWith('http') ? true : false;
-      live = false;
       const canvas = document.getElementById('canvasF');
       const ctx = canvas.getContext('2d');
       canvas.width = 1920;
@@ -355,7 +354,6 @@
     drawImage();
 
     function download(){
-      return;
       const canvas = document.getElementById('canvasF');
       const link = document.createElement('a');
       link.download = `${beatmapObj.username}.png`;
