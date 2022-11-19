@@ -247,7 +247,7 @@
       ctx.fillStyle = 'white';
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.src = beatmapObj.bg+`${Date.now().toString()}`;
+      img.src = beatmapObj.bg;
       // Load image background first
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
