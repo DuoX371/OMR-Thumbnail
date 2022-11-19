@@ -57,7 +57,7 @@
     <title>OMR Thumbnail Maker</title>
   </head>
   <body>
-    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 10:28AM</div>
+    <div style="position:absolute;top:0;color:white">Last Updated: 11/19/2022 12:50PM</div>
     <div class="row theTop">
       <div class="col-2"></div>
       <div class="col-8">
@@ -158,7 +158,7 @@
             <div class="d-flex justify-content-start">
               <div>
                 <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull">Download (Still not working)</a><br> -->
-                <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download (Still not working)</button>
+                <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download</button>
               </div>
               <div>
                 <button type="button" class="btn btn-primary" onclick="drawImageFull()">Reload</button><br>
@@ -301,23 +301,6 @@
         }
       }
     }
-
-    // async function urlToBase64(url){
-    //   // Convert url to base64 using canvas
-    //   const canvas = document.createElement('canvas');
-    //   const ctx = canvas.getContext('2d');
-    //   const img = new Image();
-    //   canvas.width = 1920;
-    //   canvas.height = 1080;
-    //   console.log(url)
-    //   img.src = url;
-    //   return await new Promise((resolve, reject) => {
-    //     img.onload = () => {
-    //       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    //       resolve(canvas.toDataURL());
-    //     }
-    //   })
-    // }
 
     function drawTextF(ctxF,text,centerX,centerY,textAlign,font){
       ctxF.save();
