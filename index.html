@@ -300,9 +300,9 @@
 
     // modal on close event
     $('#previewUploadModal').on('hidden.bs.modal', (e) => {
-        JcropApi = $('#previewUpload').data('Jcrop');
-        if(JcropApi !== undefined) JcropApi.destroy();
-      })
+      JcropApi = $('#previewUpload').data('Jcrop');
+      if(JcropApi !== undefined) JcropApi.destroy();
+    })
 
     $('#bg').on('change', (e) => {
       const file = e.target.files[0];
@@ -335,6 +335,7 @@
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
+      img.crossOrigin = 'anonymous';
       img.src = beatmapObj.bg;
       canvas.width = w;
       canvas.height = h;
@@ -448,40 +449,41 @@
         })
     }
 
-    // function openSwalUrl(){
-    //   return Swal.fire({
-    //     title: 'Enter image URL',
-    //     input: 'text',
-    //     showCancelButton: true,
-    //     confirmButtonText: 'Look up',
-    //     showLoaderOnConfirm: true,
-    //     preConfirm: (url) => {
-    //       if(!/\.(gif|jpg|jpeg|tiff|png)$/i.test(url)) {
-    //         Swal.showValidationMessage(`Invalid URL`);
-    //       }
-    //       return url;
-    //     },
-    //     allowOutsideClick: () => !Swal.isLoading()
-    //   }).then((result) => {
-    //     if(result.isConfirmed){
-    //       $('#previewUploadModal').modal({
-    //         backdrop: 'static',
-    //         keyboard: false
-    //       }, 'show');
-    //       $('#previewUpload').attr('src', result.value);
-    //       beatmapObj.bg = result.value;
-    //       $('#previewUpload').Jcrop({
-    //         aspectRatio: 16/9,
-    //         onSelect: (c) => {
-    //           pos = c;
-    //         },
-    //         setSelect: [0,0,1920,1080],
-    //         boxWidth: boxWidth,
-    //         boxHeight: boxHeight,          
-    //       })
-    //     }
-    //   })
-    // }
+    function openSwalUrl(){
+      return Swal.fire({
+        title: 'Enter image URL',
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: 'Look up',
+        showLoaderOnConfirm: true,
+        preConfirm: (url) => {
+          if(!/\.(gif|jpg|jpeg|tiff|png)$/i.test(url)) {
+            Swal.showValidationMessage(`Invalid URL`);
+          }
+          return url;
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if(result.isConfirmed){
+          const url = `https://api.yewonkim.tk/image?url=${result.value}`;
+          $('#previewUploadModal').modal({
+            backdrop: 'static',
+            keyboard: false
+          }, 'show');
+          $('#previewUpload').attr('src', url);
+          beatmapObj.bg = url;
+          $('#previewUpload').Jcrop({
+            aspectRatio: 16/9,
+            onSelect: (c) => {
+              pos = c;
+            },
+            setSelect: [0,0,1920,1080],
+            boxWidth: boxWidth,
+            boxHeight: boxHeight,          
+          })
+        }
+      })
+    }
 
 
     function download(){
