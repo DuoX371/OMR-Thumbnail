@@ -427,7 +427,7 @@
     function download(){
       const canvas = document.getElementById('canvasF');
       const link = document.createElement('a');
-      link.download = `${beatmapObj.username}.png`;
+      link.download = `${beatmapObj.username}.jpg`;
       link.href = canvas.toDataURL();
       link.click();
     }
