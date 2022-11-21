@@ -93,7 +93,7 @@
                 <div id="canvasDiv">
                   <canvas id="canvas" width="455" height="256" style="width:100%; height:100%"></canvas>
                 </div>
-                <p><small><em>Preview purposes. Dont save this image</em></small></p>
+                <p><small><em>Preview purposes. Dont save this image</em></small><button class="btn btn-primary float-end" onclick="editImage()">Edit BG</button></p>
                 <button class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#fullResModal" onclick="drawImageFull();">View Full Res</button>
               </div>
               <div class="col-xl-6">
@@ -176,6 +176,7 @@
                   <label for="bg">Background Image</label>
                   <input type="file" class="form-control-file" id="bg" accept="image/png, image/gif, image/jpeg">
                 </div>
+                <button class="btn btn-secondary" onclick="openSwalUrl()">Add BG</button>
                 <!-- <form>
                   <div class="form-group d-flex flex-row">
                     <input type="text" class="form-control w-50" id="bgM"><button class="btn btn-success">🧐</button>
@@ -249,6 +250,8 @@
     let beatmapImage;
     let exportImg;
     let pos;
+    const boxWidth = 600
+    const boxHeight = 600
 
     $('#username').on('input', (e) => {
       const value = e.target.value;
@@ -295,6 +298,12 @@
       drawImage();
     })
 
+    // modal on close event
+    $('#previewUploadModal').on('hidden.bs.modal', (e) => {
+        JcropApi = $('#previewUpload').data('Jcrop');
+        if(JcropApi !== undefined) JcropApi.destroy();
+      })
+
     $('#bg').on('change', (e) => {
       const file = e.target.files[0];
       if(file === undefined) return $('#previewUpload').attr('src', '');;
@@ -304,11 +313,6 @@
         backdrop: 'static',
         keyboard: false
       }, 'show');
-      // modal on close event
-      $('#previewUploadModal').on('hidden.bs.modal', (e) => {
-        JcropApi = $('#previewUpload').data('Jcrop');
-        if(JcropApi !== undefined) JcropApi.destroy();
-      })
       reader.onload = (e) => {
         $('#previewUpload').attr('src', e.target.result);
         beatmapObj.bg = e.target.result;
@@ -318,8 +322,8 @@
             pos = c;
           },
           setSelect: [0,0,1920,1080],
-          boxWidth: 800,
-          boxHeight: 800,          
+          boxWidth: boxWidth,
+          boxHeight: boxHeight,          
         })
       }
       reader.readAsDataURL(file);
@@ -424,11 +428,67 @@
     }
     drawImage();
 
+    function editImage(){
+      if(beatmapObj.bg === 'https://i.imgur.com/ei1IjuY.png') return;
+      // Show modal
+      $('#previewUploadModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      }, 'show');
+
+      $('#previewUpload').attr('src', beatmapObj.bg);
+        $('#previewUpload').Jcrop({
+          aspectRatio: 16/9,
+          onSelect: (c) => {
+            pos = c;
+          },
+          setSelect: [0,0,1920,1080],
+          boxWidth: boxWidth,
+          boxHeight: boxHeight,           
+        })
+    }
+
+    // function openSwalUrl(){
+    //   return Swal.fire({
+    //     title: 'Enter image URL',
+    //     input: 'text',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Look up',
+    //     showLoaderOnConfirm: true,
+    //     preConfirm: (url) => {
+    //       if(!/\.(gif|jpg|jpeg|tiff|png)$/i.test(url)) {
+    //         Swal.showValidationMessage(`Invalid URL`);
+    //       }
+    //       return url;
+    //     },
+    //     allowOutsideClick: () => !Swal.isLoading()
+    //   }).then((result) => {
+    //     if(result.isConfirmed){
+    //       $('#previewUploadModal').modal({
+    //         backdrop: 'static',
+    //         keyboard: false
+    //       }, 'show');
+    //       $('#previewUpload').attr('src', result.value);
+    //       beatmapObj.bg = result.value;
+    //       $('#previewUpload').Jcrop({
+    //         aspectRatio: 16/9,
+    //         onSelect: (c) => {
+    //           pos = c;
+    //         },
+    //         setSelect: [0,0,1920,1080],
+    //         boxWidth: boxWidth,
+    //         boxHeight: boxHeight,          
+    //       })
+    //     }
+    //   })
+    // }
+
+
     function download(){
       const canvas = document.getElementById('canvasF');
       const link = document.createElement('a');
       link.download = `${beatmapObj.username}.jpg`;
-      link.href = canvas.toDataURL();
+      link.href = canvas.toDataURL("image/jpeg");
       link.click();
     }
 

@@ -7,7 +7,7 @@
     ctx.beginPath();
     
     const theBG = new Image();
-    theBG.src = beatmapImage === undefined ? `https://t3.ftcdn.net/jpg/04/21/50/96/360_F_421509616_AW4LfRfbYST8T2ZT9gFGxGWfrCwr4qm4.jpg` : beatmapImage;
+    theBG.src = beatmapImage === undefined ? `https://i.imgur.com/ei1IjuY.png` : beatmapImage;
     beatmapObj.bg = theBG.src;
     theBG.onload = function () {
       ctx.drawImage(theBG, 0, 0, canvas.width, canvas.height);
