@@ -34,3 +34,8 @@ function modSource(mod){
       return 'assets/image/perfect.png';
   }
 }
+
+function resetJcrop(){
+  JcropApi = $('#previewUpload').data('Jcrop');
+  if(JcropApi !== undefined) JcropApi.destroy();
+}

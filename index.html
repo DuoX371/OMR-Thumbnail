@@ -64,9 +64,8 @@
   </head>
   <body>
     <div style="position:absolute;top:0;color:white">
-      Last Updated: 11/19/2022 7:47PM<br>
+      Last Updated: 11/22/2022 3:14AM<br>
       <small>To add:<br>
-      - Edit thumbnail Image(select a specific area)<br>
       - Add background image with url/beatmapsetid</small>
     </div>
     <div class="row theTop">
@@ -197,9 +196,7 @@
           <div class="modal-header">
             <div class="d-flex justify-content-start">
               <div>
-                <!-- <a href='' type="button" class="btn btn-primary" id="downloadFull">Download (Still not working)</a><br> -->
                 <button type="button" class="btn btn-primary" id="downloadFull" onclick="download()">Download</button>
-                <!-- <p><small>just right click save for now</small></p> -->
               </div>
               <div>
                 <button type="button" class="btn btn-primary ms-2" onclick="drawImageFull()">Reload</button><br>
@@ -220,8 +217,14 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
-            <div class="w-100"><button type="button" class="btn btn-primary float-end" onclick="submit()">Save</button></div>
+            <h5 class="modal-title pe-2" id="exampleModalLabel">Preview</h5>
+            <div class="w-100 d-flex">
+              <div class="form-group me-auto align-self-center">
+                <label for="ar169">16:9</label>
+                <input type="checkbox" class="form-check-input" id="ar169" checked>
+              </div>
+              <button type="button" class="btn btn-primary float-end" onclick="submit()">Save</button>
+            </div>            
             <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" style="position:relative">
@@ -300,8 +303,7 @@
 
     // modal on close event
     $('#previewUploadModal').on('hidden.bs.modal', (e) => {
-      JcropApi = $('#previewUpload').data('Jcrop');
-      if(JcropApi !== undefined) JcropApi.destroy();
+      resetJcrop()
     })
 
     $('#bg').on('change', (e) => {
@@ -327,6 +329,31 @@
         })
       }
       reader.readAsDataURL(file);
+    })
+
+    $('#ar169').on('change', (e) => {
+      resetJcrop();
+      const check = e.target.checked;
+      if(check) {
+        $('#previewUpload').Jcrop({
+          aspectRatio: 16/9,
+          onSelect: (c) => {
+            pos = c;
+          },
+          setSelect: [0,0,1920,1080],
+          boxWidth: boxWidth,
+          boxHeight: boxHeight,          
+        })
+      }else {
+        $('#previewUpload').Jcrop({
+          onSelect: (c) => {
+            pos = c;
+          },
+          setSelect: [0,0,1920,1080],
+          boxWidth: boxWidth,
+          boxHeight: boxHeight,          
+        })
+      }
     })
 
     function submit(){
@@ -450,7 +477,8 @@
     }
 
     function openSwalUrl(){
-      return Swal.fire({
+      return true;
+      Swal.fire({
         title: 'Enter image URL',
         input: 'text',
         showCancelButton: true,
@@ -471,7 +499,6 @@
             keyboard: false
           }, 'show');
           $('#previewUpload').attr('src', url);
-          beatmapObj.bg = url;
           $('#previewUpload').Jcrop({
             aspectRatio: 16/9,
             onSelect: (c) => {
