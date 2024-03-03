@@ -20,7 +20,7 @@
     <title>OMR Thumbnail Generator</title>
     <link rel="icon" href="https://styles.redditmedia.com/t5_3f5u3/styles/communityIcon_oyd035cuuo341.png">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://static.yewonkim.tk/css/mdb.min.css"/>
+    <link rel="stylesheet" href="https://static.sah.moe/css/mdb.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.9/dist/sweetalert2.all.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Exo 2' rel='stylesheet'>
@@ -493,7 +493,7 @@
         allowOutsideClick: () => !Swal.isLoading()
       }).then((result) => {
         if(result.isConfirmed){
-          const url = `https://api.yewonkim.tk/image?url=${result.value}`;
+          const url = `https://api.sah.moe/image?url=${result.value}`;
           $('#previewUploadModal').modal({
             backdrop: 'static',
             keyboard: false
@@ -525,5 +525,5 @@
   </script>
   <script src="assets/js/fetch.js"></script>
   <script src="assets/js/external.js"></script>
-  <script src="https://static.yewonkim.tk/js/mdb.min.js"></script>
+  <script src="https://static.sah.moe/js/mdb.min.js"></script>
 </html>
