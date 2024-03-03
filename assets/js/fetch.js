@@ -16,7 +16,7 @@ $(document).ready(function() {
       success: function(data) {
         if(data.code === 200){
           const score = data.data;
-          beatmapImage = `https://api.yewonkim.tk/image?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
+          beatmapImage = `https://api.sah.moe/image?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           // beatmapImage = `https://subapi.nerinyan.moe/bg/${score.beatmap.beatmapset_id}`
           $('#username').val(score.user.username)
           $('#pp').val(score.pp)
