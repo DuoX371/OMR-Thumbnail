@@ -9,7 +9,7 @@ $(document).ready(function() {
     //Disable search button
     $('button').addClass('disabled');
     $('.spinner-border').removeClass('d-none');
-    const head = `https://api.sah.moe/v1/osu/osuScore?url=${url}`
+    const head = `https://api.sah.moe/v1/osu/osuScores?url=${url}`
     const res = await $.ajax({
       url: head,
       type: 'GET',
