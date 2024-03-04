@@ -9,15 +9,14 @@ $(document).ready(function() {
     //Disable search button
     $('button').addClass('disabled');
     $('.spinner-border').removeClass('d-none');
-    const head = `https://api.sah.moe/scores?url=${url}`
+    const head = `https://api.sah.moe/v1/osu/osuScore?url=${url}`
     const res = await $.ajax({
       url: head,
       type: 'GET',
       success: function(data) {
         if(data.code === 200){
           const score = data.data;
-          // beatmapImage = `https://api.sah.moe/image?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
-          beatmapImage = `https://subapi.nerinyan.moe/bg/${score.beatmap.beatmapset_id}`
+          beatmapImage = `https://api.sah.moe/v1/osu/coverImages?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           $('#username').val(score.user.username)
           $('#pp').val(score.pp)
           $('#accuracy').val(score.accuracy*100)
