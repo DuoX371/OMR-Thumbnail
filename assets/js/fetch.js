@@ -14,7 +14,7 @@ $(document).ready(function() {
       url: head,
       type: 'GET',
       success: function(data) {
-        if(data.code === 200){
+        if(data.statusCode === 200){
           const score = data.data;
           beatmapImage = `https://api.sah.moe/v1/osu/coverImages?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           $('#username').val(score.user.username)
