@@ -9,7 +9,7 @@ $(document).ready(function() {
     //Disable search button
     $('button').addClass('disabled');
     $('.spinner-border').removeClass('d-none');
-    const head = `https://api.yewonkim.tk/scores?url=${url}`
+    const head = `https://api.sah.moe/scores?url=${url}`
     const res = await $.ajax({
       url: head,
       type: 'GET',
