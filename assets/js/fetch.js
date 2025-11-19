@@ -3,7 +3,7 @@ $(document).ready(function() {
     e.preventDefault();
     var url = $('#url').val();
     if(url === '') return;
-    const regex = /^(https?:\/\/)?osu.ppy.sh\/scores\/(osu|taiko|fruits|mania)\/([0-9]+)$/
+    const regex = /^(https?:\/\/)?osu\.ppy\.sh\/scores\/((osu|taiko|fruits|mania)\/)?([0-9]+)$/
     if(!regex.test(url)) return errorPop('Invalid url');
     // API Call
     //Disable search button
@@ -17,6 +17,7 @@ $(document).ready(function() {
         if(data.statusCode === 200){
           const score = data.data;
           beatmapImage = `https://api.sah.moe/v1/osu/coverImages?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
+          // beatmapImage = `https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           $('#username').val(score.user.username)
           $('#pp').val(score.pp)
           $('#accuracy').val(score.accuracy*100)
