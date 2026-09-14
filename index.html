@@ -493,7 +493,7 @@
         allowOutsideClick: () => !Swal.isLoading()
       }).then((result) => {
         if(result.isConfirmed){
-          const url = `https://api.sah.moe/v1/osu/coverImages?url=${result.value}`;
+          const url = `https://api.sahkai.com/v1/osu/coverImages?url=${result.value}`;
           $('#previewUploadModal').modal({
             backdrop: 'static',
             keyboard: false

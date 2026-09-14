@@ -9,14 +9,14 @@ $(document).ready(function() {
     //Disable search button
     $('button').addClass('disabled');
     $('.spinner-border').removeClass('d-none');
-    const head = `https://api.sah.moe/v1/osu/osuScores?url=${url}`
+    const head = `https://api.sahkai.com/v1/osu/osuScores?url=${url}`
     const res = await $.ajax({
       url: head,
       type: 'GET',
       success: function(data) {
         if(data.statusCode === 200){
           const score = data.data;
-          beatmapImage = `https://api.sah.moe/v1/osu/coverImages?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
+          beatmapImage = `https://api.sahkai.com/v1/osu/coverImages?url=https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           // beatmapImage = `https://assets.ppy.sh/beatmaps/${score.beatmap.beatmapset_id}/covers/fullsize.jpg`
           $('#username').val(score.user.username)
           $('#pp').val(score.pp)
